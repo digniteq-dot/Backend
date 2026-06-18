@@ -23,17 +23,41 @@ router.post('/login', async (req, res) => {
             }
         };
 
-        jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' },
-            (err, token) => {
-                if (err) throw err;
-                res.json({ token, user: { username: ADMIN_USER } });
-            }
-        );
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET || 'fallback_refresh_secret', { expiresIn: '7d' });
+        
+        res.json({ 
+            token: accessToken, 
+            refreshToken, 
+            user: { username: ADMIN_USER } 
+        });
     } else {
         res.status(400).json({ message: 'Invalid Credentials' });
+    }
+});
+
+// @route   POST api/auth/refresh
+// @desc    Refresh access token
+// @access  Public
+router.post('/refresh', (req, res) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'No refresh token provided' });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'fallback_refresh_secret');
+        const payload = {
+            user: {
+                username: decoded.user.username,
+                role: decoded.user.role
+            }
+        };
+
+        const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+        res.json({ token: newAccessToken });
+    } catch (err) {
+        return res.status(401).json({ message: 'Invalid or expired refresh token' });
     }
 });
 
