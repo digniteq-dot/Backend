@@ -68,6 +68,22 @@ const contactSchema = new mongoose.Schema({
     status: { type: String, default: 'new' }, // new, read, resolved
 }, { timestamps: true });
 
+const proposalSchema = new mongoose.Schema({
+    clientName: String,
+    businessName: String,
+    email: String,
+    phone: String,
+    description: String,
+    selectedServices: [{
+        serviceType: String,
+        planName: String,
+        price: String,
+        features: [String]
+    }],
+    totalPrice: String,
+    status: { type: String, default: 'new' }
+}, { timestamps: true });
+
 module.exports = {
     Hero: mongoose.model('Hero', heroSchema),
     Service: mongoose.model('Service', serviceSchema),
@@ -76,5 +92,6 @@ module.exports = {
     ProcessStep: mongoose.model('ProcessStep', processSchema),
     PortfolioItem: mongoose.model('PortfolioItem', portfolioSchema),
     PricingPlan: mongoose.model('PricingPlan', pricingSchema),
-    ContactSubmission: mongoose.model('ContactSubmission', contactSchema)
+    ContactSubmission: mongoose.model('ContactSubmission', contactSchema),
+    Proposal: mongoose.model('Proposal', proposalSchema)
 };

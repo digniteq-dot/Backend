@@ -17,6 +17,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const createCrudRouter = require('./routes/genericCrud');
 const createSingleItemRouter = require('./routes/singleItemCrud');
+const createProposalRouter = require('./routes/proposalCrud');
 const models = require('./models/Content');
 
 app.use('/api/auth', require('./routes/auth'));
@@ -47,6 +48,7 @@ app.use('/api/process', createCrudRouter(models.ProcessStep));
 app.use('/api/portfolio', createCrudRouter(models.PortfolioItem));
 app.use('/api/pricing', createCrudRouter(models.PricingPlan));
 app.use('/api/contact', createCrudRouter(models.ContactSubmission));
+app.use('/api/proposal', createProposalRouter(models.Proposal));
 
 app.get('/', (req, res) => {
     res.send('Digniteq API is running');
