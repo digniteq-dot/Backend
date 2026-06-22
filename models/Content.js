@@ -69,11 +69,14 @@ const contactSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const proposalSchema = new mongoose.Schema({
+    proposalId: { type: String, unique: true },
     clientName: String,
     businessName: String,
     email: String,
     phone: String,
     description: String,
+    budget: String,
+    address: String,
     selectedServices: [{
         serviceType: String,
         planName: String,
@@ -82,6 +85,20 @@ const proposalSchema = new mongoose.Schema({
     }],
     totalPrice: String,
     status: { type: String, default: 'new' }
+}, { timestamps: true });
+
+const settingSchema = new mongoose.Schema({
+    username: { type: String, default: 'admin' },
+    password: { type: String, required: true },
+    companyName: { type: String, default: 'DIGNITEQ' },
+    tagline: { type: String, default: 'Best & Affordable Digital Solutions' },
+    contactEmail: { type: String, default: 'contact@digniteq.in' },
+    contactPhone: { type: String, default: '' },
+    facebook: { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    twitter: { type: String, default: '' },
+    linkedin: { type: String, default: '' },
+    logoUrl: { type: String, default: '/assets/logo.png' }
 }, { timestamps: true });
 
 module.exports = {
@@ -93,5 +110,6 @@ module.exports = {
     PortfolioItem: mongoose.model('PortfolioItem', portfolioSchema),
     PricingPlan: mongoose.model('PricingPlan', pricingSchema),
     ContactSubmission: mongoose.model('ContactSubmission', contactSchema),
-    Proposal: mongoose.model('Proposal', proposalSchema)
+    Proposal: mongoose.model('Proposal', proposalSchema),
+    Setting: mongoose.model('Setting', settingSchema)
 };

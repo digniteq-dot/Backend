@@ -30,7 +30,26 @@ module.exports = function createProposalRouter(Model) {
     // POST create proposal (PUBLIC - no auth required)
     router.post('/', async (req, res) => {
         try {
-            const newItem = new Model(req.body);
+            // Generate proposalId
+            const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+            
+            // Find proposals created today
+            const todayStart = new Date();
+            todayStart.setHours(0, 0, 0, 0);
+            const todayEnd = new Date();
+            todayEnd.setHours(23, 59, 59, 999);
+
+            const countToday = await Model.countDocuments({
+                createdAt: { $gte: todayStart, $lte: todayEnd }
+            });
+
+            const sequence = (countToday + 1).toString().padStart(3, '0');
+            const proposalId = `DGTQ-${dateStr}-${sequence}`;
+
+            const newItem = new Model({
+                ...req.body,
+                proposalId
+            });
             const savedItem = await newItem.save();
             res.json(savedItem);
         } catch (err) {

@@ -22,6 +22,7 @@ const models = require('./models/Content');
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/settings', require('./routes/settings'));
 
 // Single items
 app.use('/api/hero', createSingleItemRouter(models.Hero, {
