@@ -65,6 +65,7 @@ const contactSchema = new mongoose.Schema({
     email: String,
     phone: String,
     message: String,
+    leadSource: String,
     status: { type: String, default: 'new' }, // new, read, resolved
 }, { timestamps: true });
 
@@ -77,6 +78,7 @@ const proposalSchema = new mongoose.Schema({
     description: String,
     budget: String,
     address: String,
+    leadSource: String,
     selectedServices: [{
         serviceType: String,
         planName: String,
